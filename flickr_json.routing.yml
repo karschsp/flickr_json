@@ -1,0 +1,26 @@
+flickr_json.list_json:
+  path: '/flickr_json/import'
+  defaults:
+    _controller: '\Drupal\flickr_json\Controller\FlickrJsonController::importJsonFiles'
+    _title: 'Flickr Import'
+  requirements:
+    _permission: 'access content'
+
+# Process all queue items with batch
+flickr_json.process_all_queue_items_with_batch:
+  path: '/flickr_json/process-all-queue-items'
+  defaults:
+    _controller: '\Drupal\flickr_json\Controller\FlickrJsonController::processAllQueueItemsWithBatch'
+  requirements:
+    _permission: 'access content'
+
+flickr_json.config_form:
+  path: '/admin/config/flickr_json/config'
+  defaults:
+    _form: '\Drupal\flickr_json\Form\ConfigForm'
+    _title: 'ConfigForm'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE
+

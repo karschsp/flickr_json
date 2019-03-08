@@ -1,0 +1,14 @@
+{
+  "name": "drupal/flickr_json",
+  "type": "drupal-module",
+  "description": "Looks at local flickr .json files for parsing displaying flickr photos (also stored locally).",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/flickr_json",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/flickr_json",
+    "source": "http://cgit.drupalcode.org/flickr_json"
+  },
+  "require": { }
+}

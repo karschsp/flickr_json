@@ -1,0 +1,3 @@
+flickr_json:
+  flickr_jpgs_location: "flickr_images"
+  flickr_json_location: "flickr_json"

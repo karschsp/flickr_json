@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains flickr_json.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function flickr_json_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the flickr_json module.
+    case 'help.page.flickr_json':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Looks at local flickr .json files for parsing displaying flickr photos (also stored locally).') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function flickr_json_theme() {
+  return [
+    'flickr_json' => [
+      'render element' => 'children',
+    ],
+  ];
+}

@@ -1,0 +1,7 @@
+flickr_json.config_form:
+  title: 'Flickr JSON'
+  route_name: flickr_json.config_form
+  description: 'Configure path locations for Flickr JSON module.'
+  parent: system.admin_config_system
+  weight: 99
+

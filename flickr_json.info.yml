@@ -1,0 +1,10 @@
+name: 'Flickr JSON'
+type: module
+description: 'Looks at local flickr .json files for parsing displaying flickr photos (also stored locally).'
+core: 8.x
+package: 'Custom'
+dependencies:
+  - colorbox
+  - exif
+  - media
+

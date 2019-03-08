@@ -1,0 +1,9 @@
+uuid: c47e76c0-9504-4f9e-883d-0652a3660aa0
+langcode: en
+status: true
+dependencies: {  }
+name: Album
+vid: album
+description: 'Flickr photo album'
+hierarchy: 0
+weight: 0
