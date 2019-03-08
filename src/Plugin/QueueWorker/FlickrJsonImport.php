@@ -8,6 +8,7 @@ use Drupal\Core\Queue\SuspendQueueException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\Entity\Node;
 use Drupal\media\Entity\Media;
+use Drupal\taxonomy\Entity\Term;
 
 abstract class FlickrJsonImport extends QueueWorkerBase implements ContainerFactoryPluginInterface {
   public function __construct(array $configuration, $plugin_id, $plugin_definition)
