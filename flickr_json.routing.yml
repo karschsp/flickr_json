@@ -6,6 +6,13 @@ flickr_json.list_json:
   requirements:
     _permission: 'access content'
 
+flickr_json.import_albums:
+  path: '/flickr_json/import-albums'
+  defaults:
+    _controller: '\Drupal\flickr_json\Controller\FlickrJsonController::importAlbums'
+    _title: 'Flickr Album Import'
+  requirements:
+    _permission: 'access content'
 # Process all queue items with batch
 flickr_json.process_all_queue_items_with_batch:
   path: '/flickr_json/process-all-queue-items'

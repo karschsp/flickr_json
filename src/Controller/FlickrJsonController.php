@@ -54,6 +54,52 @@ class FlickrJsonController extends ControllerBase {
     return new static($queue_factory, $queue_manager);
   }
 
+  public function importAlbums() {
+    $output = '';
+    $config = \Drupal::config('flickr_json.config');
+    $json_location = $config->get('flickr_json_location');
+    $album_json = file_get_contents('public://' . $json_location . '/albums.json');
+
+    $albums_json = \GuzzleHttp\json_decode($album_json);
+    foreach ($albums_json as $albums) {
+      foreach ($albums as $album) {
+
+        $query = \Drupal::entityQuery('taxonomy_term');
+        $query->condition('vid', "album");
+        $query->condition('name', $album->title);
+        $tids = $query->execute();
+        if (!$tids) {
+          $term = $this->createAlbumTerm($album->title, $album->description);
+          $tids[] = $term->tid;
+          $output .= '<p>creating ' . $album->title . ' with description . ' . $album->description . '</p>';
+        } else {
+          $output .= '<p><em>album ' . $album->title . ' already exists with termID ' . implode(',', $tids) . '</em></p>';
+        }
+
+        foreach ($album->photos as $photo) {
+          $query = \Drupal::entityQuery('node')
+            ->condition('field_id', $photo)
+            ->condition('type', 'photo');
+
+          $nids = $query->execute();
+          foreach ($nids as $nid) {
+            if ($nid) {
+              $node = Node::load($nid);
+              $node->field_album = $tids;
+              $node->save();
+
+              $output .= 'updating NODE ' . (string)$nid;
+            }
+          }
+        }
+      }
+    }
+    return [
+      '#markup' => $this->t($output)
+    ];
+
+  }
+
   /**
    * Process all queue items with batch
    */
@@ -78,9 +124,6 @@ class FlickrJsonController extends ControllerBase {
 
     // Adds the batch sets
     batch_set($batch);
-    // Process the batch and after redirect to the frontpage
-    // kint($batch);
-    // die();
     return batch_process('<front>');
   }
 
@@ -109,7 +152,9 @@ class FlickrJsonController extends ControllerBase {
 
         // Create new queue item
         $item = new \stdClass();
+
         $item->data = 'public://' . $json_location . '/' . basename($path);
+        $output .= $item->data . '<br />';
         // kint($item);
         $queue->createItem($item);
         // $nids[] = $this->createNodeFromJson($path);
@@ -119,7 +164,7 @@ class FlickrJsonController extends ControllerBase {
 
     return array(
       '#type' => 'markup',
-      '#markup' => $this->t('@count queue items are created.', array('@count' => $count)),
+      '#markup' => $output . $this->t('@count queue items are created.', array('@count' => $count)),
     );
     /* foreach ($nids as $nid) {
       $output .= 'Create node with nid ' . $nid . '<br />';
@@ -130,7 +175,7 @@ class FlickrJsonController extends ControllerBase {
 
   }
 
-  private function createNodeFromJson($json_path) {
+  /* private function createNodeFromJson($json_path) {
     $config = \Drupal::config('flickr_json.config');
     $jpg_location = $config->get('flickr_jpgs_location');
     $json = file_get_contents($json_path);
@@ -176,11 +221,7 @@ class FlickrJsonController extends ControllerBase {
           'field_id' => $arr->id,
           'field_filename' => basename($arr->original),
           'field_album' => $tids,
-          /* 'field_image' => [
-            'target_id' => $file->id(),
-            'alt' => $title,
-            'title' => $title
-          ], */
+
           'field_media_photograph' => [
             'target_id' => $media->id(),
           ],
@@ -190,16 +231,10 @@ class FlickrJsonController extends ControllerBase {
         return $node->id();
       }
     }
-  }
+  } */
 
-  private function checkNodeByTitle($id) {
-    /* $nodes = \Drupal::entityTypeManager()
-      ->getStorage('node')
-      ->loadByProperties(['title' => $id]);
-    foreach ( $nodes as $node ) {
-      return TRUE;
-    }
-    return FALSE; */
+  /* private function checkNodeByTitle($id) {
+
     $query = \Drupal::service('entity.query');
     $node_ids = $query->get('node')
       ->condition('type', 'photo')
@@ -216,13 +251,15 @@ class FlickrJsonController extends ControllerBase {
 
   private function checkTermByTitle($title) {
 
-  }
+  } */
 
-  private function createAlbumTerm($title) {
+  private function createAlbumTerm($title, $description) {
     $term = Term::create([
       'vid' => 'album',
       'name' => $title,
+      'description' => $description,
     ])->save();
+    return $term;
 
   }
 

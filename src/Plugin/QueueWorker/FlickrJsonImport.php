@@ -63,15 +63,14 @@ abstract class FlickrJsonImport extends QueueWorkerBase implements ContainerFact
   }
 
   protected function createContent($json_path) {
+    $tids = [];
     $config = \Drupal::config('flickr_json.config');
     $jpg_location = $config->get('flickr_jpgs_location');
     $json = file_get_contents($json_path);
-    // kint($json);
-    // die();
+
     $arr = \GuzzleHttp\json_decode($json);
     if (!$this->checkNodeByTitle($arr->id)) {
       foreach ($arr->albums as $album) {
-        // echo 'ABLUM: ' . $album->title;
         $query = \Drupal::entityQuery('taxonomy_term');
         $query->condition('vid', "album");
         $query->condition('name', $album->title);
